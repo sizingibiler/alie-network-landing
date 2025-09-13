@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alie Network - The Intelligence Engine for Web3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        :root {
+            --background-color: #000000;
+            --text-color: #f0f0f0;
+            --primary-glow: rgba(99, 102, 241, 0.5);
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        .video-bg-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .video-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-video-overlay {
+            background: radial-gradient(circle at center, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.8) 80%, #000 100%);
+        }
+
+        .section-container {
+            position: relative;
+            padding: 6rem 1.5rem;
+            overflow: hidden;
+        }
+
+        .glow-border {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .glow-border:hover {
+            border-color: rgba(99, 102, 241, 0.7);
+            box-shadow: 0 0 25px var(--primary-glow);
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: #a0aec0;
+        }
+
+        .animated-element {
+            opacity: 0;
+            transform: translateY(40px);
+            filter: blur(10px);
+            transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), filter 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .animated-element.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        /* Marquee Animation */
+        .marquee {
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+        .marquee-content {
+            display: flex;
+            align-items: center;
+            animation: scroll 40s linear infinite;
+            width: max-content;
+        }
+       
+        @keyframes scroll {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-50%);
+            }
+        }
+        
+        .logo-item img {
+            height: 40px;
+            max-width: none;
+            filter: grayscale(100%) opacity(50%);
+            transition: all 0.3s ease-in-out;
+            margin: 0 2.5rem;
+        }
+
+        .logo-item img:hover {
+            filter: grayscale(0%) opacity(100%);
+            transform: scale(1.15);
+        }
+        
+        /* Section Divider */
+        .section-divider {
+            height: 2px;
+            width: 0%;
+            background: linear-gradient(to right, rgba(139, 92, 246, 0), rgba(139, 92, 246, 0.6), rgba(139, 92, 246, 0));
+            margin: auto;
+            opacity: 0;
+            transition: width 1.2s cubic-bezier(0.23, 1, 0.32, 1), opacity 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .section-divider.is-visible {
+            width: 66%;
+            opacity: 1;
+        }
+
+        #whitepaper {
+            background-image: url('phoenix.png');
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        
+        .team-member-img-container {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            padding: 4px;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .team-member-img-container:hover {
+            transform: scale(1.1);
+        }
+        .team-member-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            filter: grayscale(100%);
+            transition: filter 0.4s ease;
+            border: 3px solid #000; /* Black border for contrast on the ring */
+        }
+        .team-member-img-container:hover .team-member-img {
+            filter: grayscale(0%);
+        }
+
+        /* Top Ticker */
+        .top-ticker {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 0.5rem 0;
+            background: linear-gradient(90deg, #8b5cf6, #3b82f6, #8b5cf6);
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .top-ticker-content {
+            display: inline-block;
+            animation: ticker-scroll 160s linear infinite;
+        }
+        .top-ticker-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.9);
+            padding: 0 0.25rem; /* This controls the space between repetitions */
+            letter-spacing: 0.05em;
+        }
+        .top-ticker-text > .opacity-50 {
+            margin-left: 0.25rem; /* This controls space before the separator */
+        }
+        @keyframes ticker-scroll {
+            from {
+                transform: translateX(0%);
+            }
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Top Ticker -->
+    <div class="top-ticker">
+        <div class="top-ticker-content">
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+             <!-- Duplicates for seamless scroll -->
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <!-- Second set of duplicates to ensure no gaps on wide screens -->
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+             <!-- Duplicates for seamless scroll -->
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+            <span class="top-ticker-text">STOP GUESSING , START GROWING <span class="opacity-50">//</span></span>
+        </div>
+    </div>
+
+
+    <!-- Header -->
+    <header class="fixed top-9 left-0 right-0 z-50 transition-all duration-300" x-data="{ scrolled: false }" @scroll.window="scrolled = window.scrollY > 50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center transition-all duration-300" :class="{'bg-black/50 backdrop-blur-lg rounded-full mt-4': scrolled, 'mt-0': !scrolled}">
+            <a href="#" class="flex-shrink-0">
+                <img src="logo.png" alt="Alie Network Logo" class="h-12 w-auto">
+            </a>
+            <div class="hidden md:flex items-center space-x-8 text-gray-300">
+                <a href="#services" class="hover:text-white transition">Services</a>
+                <a href="#technology" class="hover:text-white transition">Technology</a>
+                <a href="#blog" class="hover:text-white transition">Insights</a>
+                <a href="#whitepaper" class="hover:text-white transition">Whitepaper</a>
+                <a href="#team" class="hover:text-white transition">Team</a>
+            </div>
+            <a href="#contact" class="px-6 py-2 font-semibold text-white rounded-full btn-primary">
+                Get Started
+            </a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="relative min-h-screen flex items-center justify-start text-left overflow-hidden">
+        <div class="video-bg-container">
+            <video class="video-bg" autoplay loop muted playsinline src="1.mp4"></video>
+            <div class="absolute inset-0 hero-video-overlay"></div>
+        </div>
+        <div class="relative z-10 p-8 md:p-16 lg:ml-20 max-w-2xl">
+            <h2 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-4 tracking-tighter animated-element">
+                <span class="scramble-text"></span><br><span class="scramble-text"></span>
+            </h2>
+            <p class="scramble-text-p text-lg md:text-xl font-medium text-gray-300 mb-8 animated-element" style="transition-delay: 150ms;"></p>
+            <a href="#services" class="inline-block px-8 py-4 text-lg font-bold text-white rounded-full btn-primary animated-element" style="transition-delay: 300ms;">
+                Discover Our Solutions
+            </a>
+        </div>
+    </main>
+
+    <!-- Trusted by Section -->
+    <section id="trusted-by" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h3 class="text-center text-sm font-bold tracking-widest text-gray-500 uppercase mb-12 animated-element">TRUSTED BY THE BEST</h3>
+            <div class="marquee animated-element" style="transition-delay: 150ms;">
+                <div class="marquee-content">
+                    <div class="logo-item"><img src="binance-Photoroom.png" alt="Binance"></div>
+                    <div class="logo-item"><img src="coinbase-Photoroom (1).png" alt="Coinbase"></div>
+                    <div class="logo-item"><img src="polygon-Photoroom.png" alt="Polygon"></div>
+                    <div class="logo-item"><img src="arbitrum-Photoroom.png" alt="Arbitrum"></div>
+                    <div class="logo-item"><img src="Optimism-Photoroom.png" alt="Optimism"></div>
+                    <div class="logo-item"><img src="chainlink-Photoroom.png" alt="Chainlink"></div>
+                    <div class="logo-item"><img src="avalanchle-Photoroom.png" alt="Avalanche"></div>
+                    <div class="logo-item"><img src="the graph-Photoroom.png" alt="The Graph"></div>
+                    <!-- Duplicates for seamless scroll -->
+                    <div class="logo-item"><img src="binance-Photoroom.png" alt="Binance"></div>
+                    <div class="logo-item"><img src="coinbase-Photoroom (1).png" alt="Coinbase"></div>
+                    <div class="logo-item"><img src="polygon-Photoroom.png" alt="Polygon"></div>
+                    <div class="logo-item"><img src="arbitrum-Photoroom.png" alt="Arbitrum"></div>
+                    <div class="logo-item"><img src="Optimism-Photoroom.png" alt="Optimism"></div>
+                    <div class="logo-item"><img src="chainlink-Photoroom.png" alt="Chainlink"></div>
+                    <div class="logo-item"><img src="avalanchle-Photoroom.png" alt="Avalanche"></div>
+                    <div class="logo-item"><img src="the graph-Photoroom.png" alt="The Graph"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="section-container min-h-screen flex items-center">
+        <div class="video-bg-container">
+            <video class="video-bg" autoplay loop muted playsinline src="Robot yüz.mp4"></video>
+            <div class="absolute inset-0 bg-black/80"></div>
+        </div>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-20 max-w-3xl mx-auto services-animation-trigger">
+                <h2 class="section-title animated-element scramble-title">Productized Solutions</h2>
+                <p class="section-subtitle mt-4 animated-element scramble-subtitle" style="transition-delay: 150ms;">Data-driven growth packages designed for every stage of your project's lifecycle.</p>
+            </div>
+            <div class="grid md:grid-cols-3 max-w-7xl mx-auto md:divide-x md:divide-gray-800">
+                <!-- LAUNCHPAD Package -->
+                <div class="flex flex-col text-left animated-element p-8" style="transition-delay: 300ms;">
+                    <h3 class="text-2xl font-bold mb-3 text-white scramble-card-title">LAUNCHPAD Package</h3>
+                    <p class="text-gray-400 mb-6 flex-grow scramble-card-p">An intensive growth sprint to maximize launch impact for new projects before TGE.</p>
+                    <div class="my-6 border-t border-gray-800"></div>
+                    <ul class="space-y-2 text-gray-300">
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1">✓</span> KOL Network Activation</li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1">✓</span> Strategic Partnerships</li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1">✓</span> Community Building</li>
+                    </ul>
+                </div>
+                <!-- ECOSYSTEM GROWTH Package -->
+                <div class="flex flex-col text-left animated-element p-8" style="transition-delay: 450ms;">
+                    <h3 class="text-2xl font-bold mb-3 text-white scramble-card-title">ECOSYSTEM GROWTH</h3>
+                    <p class="text-gray-400 mb-6 flex-grow scramble-card-p">A continuous monthly partnership to revitalize community, increase adoption, and ensure steady growth.</p>
+                    <div class="my-6 border-t border-gray-800"></div>
+                    <ul class="space-y-2 text-gray-300">
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1">✓</span> Community Revival</li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1">✓</span> Market Analysis</li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1">✓</span> Growth Automation</li>
+                    </ul>
+                </div>
+                <!-- DATA & STRATEGY Module -->
+                <div class="flex flex-col text-left animated-element p-8" style="transition-delay: 600ms;">
+                    <h3 class="text-2xl font-bold mb-3 text-white scramble-card-title">DATA & STRATEGY</h3>
+                    <p class="text-gray-400 mb-6 flex-grow scramble-card-p">Bespoke market analysis, competitor reports, and strategic data to empower in-house teams.</p>
+                    <div class="my-6 border-t border-gray-800"></div>
+                    <ul class="space-y-2 text-gray-300">
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1">✓</span> Custom Market Analysis</li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1">✓</span> Competitor Analysis</li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1">✓</span> Strategic Reports</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="bg-black">
+        <div class="section-divider"></div>
+    </div>
+
+    <!-- Technology Section -->
+    <section id="technology" class="section-container min-h-screen flex items-center">
+         <div class="video-bg-container">
+            <video class="video-bg" autoplay loop muted playsinline src="3.mp4"></video>
+            <div class="absolute inset-0 bg-black/80"></div>
+        </div>
+        <div class="container mx-auto px-6 relative tech-animation-trigger">
+            <div class="mb-20 max-w-3xl">
+                <h2 class="section-title animated-element scramble-title-tech">[ HOW IT WORKS ]</h2>
+            </div>
+            <div class="space-y-8 max-w-2xl">
+                <div class="glow-border p-8 rounded-2xl bg-gray-900/40 flex flex-col text-left animated-element" style="transition-delay: 300ms;">
+                    <h3 class="text-2xl font-bold mb-3 text-white">Phoenix Engine</h3>
+                    <p class="text-gray-400 flex-grow">Our 24/7 autonomous intelligence engine that scans the market to detect alpha signals, trends, and opportunities before they go mainstream.</p>
+                </div>
+                <div class="glow-border p-8 rounded-2xl bg-gray-900/40 flex flex-col text-left animated-element" style="transition-delay: 450ms;">
+                    <h3 class="text-2xl font-bold mb-3 text-white">S.A.G.A. Analysis</h3>
+                    <p class="text-gray-400 flex-grow">A proprietary scoring system that rates projects with a "Confidence Score" based on hundreds of data points across team, tech, community, and financial health.</p>
+                </div>
+                <div class="glow-border p-8 rounded-2xl bg-gray-900/40 flex flex-col text-left animated-element" style="transition-delay: 600ms;">
+                    <h3 class="text-2xl font-bold mb-3 text-white">X-Analyzer</h3>
+                    <p class="text-gray-400 flex-grow">A data-driven framework for selecting high-ROI KOLs and influencers, ensuring your marketing spend is never wasted on vanity metrics.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="bg-black">
+        <div class="section-divider"></div>
+    </div>
+
+    <!-- Blog/Insights Section -->
+    <section id="blog" class="section-container flex justify-end">
+        <div class="video-bg-container">
+            <video class="video-bg" autoplay loop muted playsinline src="morlu.mp4"></video>
+            <div class="absolute inset-0 bg-black/70"></div>
+        </div>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-md ml-auto text-right">
+                <div class="mb-12 animated-element">
+                    <h2 class="text-3xl font-bold">Latest Insights</h2>
+                    <p class="text-lg text-gray-400 mt-2">From our research and analysis desk.</p>
+                </div>
+                <div class="space-y-6">
+                    <!-- Blog Post 1 -->
+                    <div class="glow-border p-6 rounded-2xl bg-gray-900/40 text-left animated-element" style="transition-delay: 200ms;">
+                        <p class="text-xs font-semibold text-indigo-400 mb-2">CASE STUDY</p>
+                        <h3 class="text-xl font-bold mb-2 text-white">The Future of Web3 Intelligence</h3>
+                        <p class="text-gray-400 mb-4 text-sm">An in-depth look at how data-driven strategies are shaping the next generation of decentralized applications...</p>
+                        <a href="#" class="font-semibold text-blue-400 hover:text-blue-300 transition text-sm">Read More &rarr;</a>
+                    </div>
+                    <!-- Blog Post 2 -->
+                    <div class="glow-border p-6 rounded-2xl bg-gray-900/40 text-left animated-element" style="transition-delay: 400ms;">
+                        <p class="text-xs font-semibold text-indigo-400 mb-2">ANALYSIS</p>
+                        <h3 class="text-xl font-bold mb-2 text-white">From Noise to Signal: Data-Driven Growth</h3>
+                        <p class="text-gray-400 mb-4 text-sm">Discover how we filter out market noise to pinpoint actionable growth signals for our partners...</p>
+                        <a href="#" class="font-semibold text-blue-400 hover:text-blue-300 transition text-sm">Read More &rarr;</a>
+                    </div>
+                     <!-- Blog Post 3 -->
+                    <div class="glow-border p-6 rounded-2xl bg-gray-900/40 text-left animated-element" style="transition-delay: 600ms;">
+                        <p class="text-xs font-semibold text-indigo-400 mb-2">DEEP DIVE</p>
+                        <h3 class="text-xl font-bold mb-2 text-white">Project Spotlight: Aethir Review</h3>
+                        <p class="text-gray-400 mb-4 text-sm">A complete breakdown of Aethir's potential, analyzed through our proprietary S.A.G.A. framework...</p>
+                        <a href="#" class="font-semibold text-blue-400 hover:text-blue-300 transition text-sm">Read More &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="bg-black">
+        <div class="section-divider"></div>
+    </div>
+
+
+    <!-- Whitepaper Section -->
+    <section id="whitepaper" class="section-container relative">
+        <div class="absolute inset-0 bg-black/70 z-0"></div>
+        <div class="container mx-auto px-6 text-center relative z-10">
+             <div class="max-w-4xl mx-auto p-8 sm:p-12 rounded-2xl animated-element whitepaper-animation-trigger">
+                <h3 class="section-title mb-4">The <span class="scramble-saga"></span> Framework</h3>
+                <p class="section-subtitle mb-8">
+                    Our whitepaper, "A Data-Driven Intelligence Engine for Web3 & AI," details our scoring methodology, case studies, and vision. Discover the logic behind our technology.
+                </p>
+                <button class="px-8 py-3 text-lg font-bold text-white rounded-full btn-primary">
+                    Download Whitepaper
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Divider -->
+    <div class="bg-black">
+        <div class="section-divider"></div>
+    </div>
+
+    <!-- Team Section -->
+    <section id="team" class="section-container bg-black text-gray-200">
+        <div class="container mx-auto px-6">
+             <div class="text-center mb-16 max-w-3xl mx-auto animated-element">
+                <h2 class="section-title text-white">Our Team</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto text-center">
+                <div class="animated-element" style="transition-delay: 100ms;">
+                    <div class="team-member-img-container mx-auto mb-6">
+                        <img src="hamza aktan.png" alt="Hamza Aktan" class="team-member-img">
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Hamza Aktan</h3>
+                    <p class="text-blue-400 font-semibold">Founder</p>
+                </div>
+                <div class="animated-element" style="transition-delay: 200ms;">
+                    <div class="team-member-img-container mx-auto mb-6">
+                        <img src="berkay kaya.png" alt="Berkay Kaya" class="team-member-img">
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Berkay Kaya</h3>
+                    <p class="text-blue-400 font-semibold">Founder</p>
+                </div>
+                <div class="animated-element" style="transition-delay: 300ms;">
+                    <div class="team-member-img-container mx-auto mb-6">
+                        <img src="ziya eyüboğlu.png" alt="Ziya Eyüboğlu" class="team-member-img">
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Ziya Eyüboğlu</h3>
+                    <p class="text-blue-400 font-semibold">Founder</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="bg-black">
+        <div class="section-divider"></div>
+    </div>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section-container text-center">
+        <div class="video-bg-container">
+            <video class="video-bg" autoplay loop muted playsinline src="2.mp4"></video>
+            <div class="absolute inset-0 bg-black/70"></div>
+        </div>
+        <div class="container mx-auto px-6 relative z-10 animated-element">
+            <h2 class="section-title">Ready to Grow?</h2>
+            <p class="section-subtitle mt-4 max-w-2xl mx-auto">Schedule a call to discuss how our data-driven strategies can elevate your project to the next level.</p>
+            <a href="#" class="mt-8 inline-block px-10 py-4 text-lg font-bold text-white rounded-full btn-primary">
+                Schedule a Call
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black py-8">
+        <div class="container mx-auto px-6 text-center text-gray-500">
+            <div class="flex justify-center space-x-6 mb-4">
+                 <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                 <a href="#" class="hover:text-white transition">Terms of Service</a>
+                 <a href="mailto:info@alie.network" class="hover:text-white transition">Contact</a>
+            </div>
+            <p>&copy; 2025 Alie Network. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        class TextScramble {
+          constructor(el) {
+            this.el = el
+            this.chars = '!<>-_\\/[]{}—=+*^?#________'
+            this.update = this.update.bind(this)
+          }
+          setText(newText, options = {}) {
+            const { framesPerChar = 6, scrambleDuration = 30 } = options;
+            const oldText = this.el.innerText
+            const length = Math.max(oldText.length, newText.length)
+            const promise = new Promise((resolve) => this.resolve = resolve)
+            this.queue = []
+
+            for (let i = 0; i < length; i++) {
+              const from = oldText[i] || ''
+              const to = newText[i] || ''
+              const start = i * framesPerChar
+              const end = start + scrambleDuration
+              this.queue.push({ from, to, start, end })
+            }
+            cancelAnimationFrame(this.frameRequest)
+            this.frame = 0
+            this.update()
+            return promise
+          }
+          update() {
+            let output = ''
+            let complete = 0
+            for (let i = 0, n = this.queue.length; i < n; i++) {
+              let { from, to, start, end, char } = this.queue[i]
+              if (this.frame >= end) {
+                complete++
+                output += to
+              } else if (this.frame >= start) {
+                if (!char || Math.random() < 0.28) {
+                  char = this.randomChar()
+                  this.queue[i].char = char
+                }
+                output += `<span class="opacity-75">${char}</span>`
+              } else {
+                output += from
+              }
+            }
+            this.el.innerHTML = output
+            if (complete === this.queue.length) {
+              this.resolve()
+            } else {
+              this.frameRequest = requestAnimationFrame(this.update)
+              this.frame++
+            }
+          }
+          randomChar() {
+            return this.chars[Math.floor(Math.random() * this.chars.length)]
+          }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatedElements = document.querySelectorAll('.animated-element');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        
+                        if (entry.target.classList.contains('services-animation-trigger')) {
+                            // --- Scramble for Services Section ---
+                            const serviceTitle = entry.target.querySelector('.scramble-title');
+                            const serviceSubtitle = entry.target.querySelector('.scramble-subtitle');
+                            const serviceCards = entry.target.querySelectorAll('.scramble-card-title');
+                            const servicePs = entry.target.querySelectorAll('.scramble-card-p');
+
+                            const originalTexts = {
+                                title: 'Productized Solutions',
+                                subtitle: "Data-driven growth packages designed for every stage of your project's lifecycle.",
+                                cards: [
+                                    { title: 'LAUNCHPAD Package', p: 'An intensive growth sprint to maximize launch impact for new projects before TGE.' },
+                                    { title: 'ECOSYSTEM GROWTH', p: 'A continuous monthly partnership to revitalize community, increase adoption, and ensure steady growth.' },
+                                    { title: 'DATA & STRATEGY', p: 'Bespoke market analysis, competitor reports, and strategic data to empower in-house teams.' }
+                                ]
+                            };
+
+                            const fxTitle = new TextScramble(serviceTitle);
+                            const fxSubtitle = new TextScramble(serviceSubtitle);
+
+                            setTimeout(() => {
+                                fxTitle.setText(originalTexts.title);
+                                setTimeout(() => {
+                                    fxSubtitle.setText(originalTexts.subtitle);
+                                }, 300);
+                            }, 200);
+
+                            serviceCards.forEach((cardTitleEl, index) => {
+                                const cardPEl = servicePs[index];
+                                const fxCardTitle = new TextScramble(cardTitleEl);
+                                const fxCardP = new TextScramble(cardPEl);
+
+                                setTimeout(() => {
+                                    fxCardTitle.setText(originalTexts.cards[index].title);
+                                    setTimeout(() => {
+                                        fxCardP.setText(originalTexts.cards[index].p);
+                                    }, 200);
+                                }, 800 + (index * 400));
+                            });
+                        }
+
+                        if (entry.target.classList.contains('whitepaper-animation-trigger')) {
+                            const sagaSpan = entry.target.querySelector('.scramble-saga');
+                            if (sagaSpan) {
+                                // Clear it first to ensure animation starts from blank
+                                sagaSpan.innerHTML = '';
+                                const fxSaga = new TextScramble(sagaSpan);
+                                const config = { framesPerChar: 25, scrambleDuration: 45 };
+                                setTimeout(() => {
+                                    fxSaga.setText("S.A.G.A.", config);
+                                }, 300);
+                            }
+                        }
+
+                        if (entry.target.classList.contains('tech-animation-trigger')) {
+                            const techTitle = entry.target.querySelector('.scramble-title-tech');
+                            if (techTitle) {
+                                const fxTechTitle = new TextScramble(techTitle);
+                                setTimeout(() => {
+                                    fxTechTitle.setText('[ HOW IT WORKS ]');
+                                }, 200);
+                            }
+                        }
+                        
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.2
+            });
+            animatedElements.forEach(el => {
+                observer.observe(el);
+            });
+
+            // --- Observer for Dividers ---
+            const dividerElements = document.querySelectorAll('.section-divider');
+            const dividerObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        dividerObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.5
+            });
+            dividerElements.forEach(el => {
+                dividerObserver.observe(el);
+            });
+
+
+            // --- Scramble Effect for Hero ---
+            const scrambleSpans = document.querySelectorAll('.scramble-text');
+            const scrambleP = document.querySelector('.scramble-text-p');
+
+            const line1 = 'Stop Guessing.';
+            const line2 = 'Start Growing.';
+            const paragraph = 'We are the intelligence partner for Web3, turning data into dominance with our proprietary analytical engine.';
+            
+            const fx1 = new TextScramble(scrambleSpans[0]);
+            const fx2 = new TextScramble(scrambleSpans[1]);
+            const fx3 = new TextScramble(scrambleP);
+
+            setTimeout(() => {
+                fx1.setText(line1).then(() => {
+                    setTimeout(() => {
+                        fx2.setText(line2);
+                    }, 200); // Short delay before starting the second line
+                });
+                setTimeout(() => {
+                     fx3.setText(paragraph);
+                }, 600); // Delay for the paragraph
+            }, 500); // Initial delay to let the page settle
+        });
+    </script>
+</body>
+</html>
+
